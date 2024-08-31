@@ -3,11 +3,13 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include "invoice.h"
+#include "../invoice.cpp"
 
 class Database {
 public:
     Database(const std::string& dbPath) : dbPath_(dbPath) {}
+
+    
 
     void saveInvoice(Invoice & invoice) {
         std::ofstream file(dbPath_, std::ios::app);

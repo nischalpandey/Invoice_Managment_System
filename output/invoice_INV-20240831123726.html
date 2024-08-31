@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Invoice</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; height: 100vh;overflow: hidden; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1);overflow: auto; box-sizing: border-box; }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
         .logo { max-width: 150px; margin-bottom: 10px; }
         .college-info { margin-bottom: 20px; text-align: center; }
@@ -28,7 +28,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="media/logo.jpg" alt="Kamnalagne Engineering College Logo" class="logo">
+            <img src="../media/logo.jpg" alt="Kamnalagne Engineering College Logo" class="logo">
             <h1>Kamnalagne Engineering College (KEC)</h1>
         </div>
         <div class="college-info">
@@ -39,13 +39,13 @@
         <h2 style="text-align: center;">Monthly Invoice</h2>
         <div class="invoice-details">
             <div>
-                <p><strong>Invoice No:</strong> INV-202408311020</p>
+                <p><strong>Invoice No:</strong> INV-20240831123726</p>
                 <p><strong>Date:</strong> 2024-08-31</p>
-                <p><strong>Due Date:</strong> 2024-09-15</p>
+                
             </div>
             <div>
-                <p><strong>Student Name:</strong> John Doe</p>
-                <p><strong>Student ID:</strong> S12345</p>
+                <p><strong>Student Name:</strong> Nisccs sds</p>
+                <p><strong>Student ID:</strong> 34567</p>
             </div>
         </div>
         <table>
@@ -67,44 +67,19 @@
                 <td>Rs200.00</td>
                 <td>Rs200.00</td>
             </tr>
-            <tr>
-                <td>Laboratory Fee</td>
-                <td>1</td>
-                <td>Rs300.00</td>
-                <td>Rs300.00</td>
-            </tr>
-            <tr>
-                <td>Accommodation</td>
-                <td>1</td>
-                <td>Rs1000.00</td>
-                <td>Rs1000.00</td>
-            </tr>
 
         </table>
         <div class="total">
-            <p>Total Amount: Rs6500.00</p>
+            <p>Total Amount: Rs5200.00</p>
         </div>
         <div class="footer">
             <p>Thank you for your prompt payment. If you have any questions, please contact our accounting department.</p>
         </div>
         <div class="buttons">
-            <a href="#" class="btn" onclick="window.print();">Print Invoice</a>
-            <a href="#" class="btn" onclick="generatePDF();">Generate PDF</a>
+            <a href="#" class="btn" onclick="window.print();">Print Invoice / Save As PDF</a>
+         
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script>
-        function generatePDF() {
-            const element = document.body;
-            const opt = {
-                margin:       10,
-                filename:     'invoice.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-    </script>
+  
 </body>
 </html>

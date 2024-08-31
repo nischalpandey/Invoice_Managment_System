@@ -6,9 +6,12 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "-I", "${workspaceFolder}/headers",  // Include path for headers
                 "main.cpp",  // List all your .cpp files
                 "about.cpp",
+                "models/item.cpp",
+                "models/collegeinfo.cpp",
+                "db/dbmanager.cpp",
+                
                 "invoice.cpp",
                 "-o", "ourapp" // Output executable name
             ],

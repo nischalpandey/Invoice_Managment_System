@@ -1,22 +1,123 @@
-#include "headers/about.h"
-#include "headers/invoice.h"
+#include <iostream>
+#include <string>
+#include <vector>
+#include "db/dbmanager.cpp"
 
+class Config {
+public:
+    Config(const std::string& configFile) {
+        // In a real application, you would read from the config file here
+        databasePath_ = "db/invoices.txt";
+        outputPath_ = "./output/";
+    }
 
-#include<iostream>
-#include<string>
+    std::string getDatabasePath() const { return databasePath_; }
+    std::string getOutputPath() const { return outputPath_; }
+
+private:
+    std::string databasePath_;
+    std::string outputPath_;
+};
+
+void generateInvoice(const Config& config, Database& db) {
+    std::string studentName, studentID;
+    std::cout << "Enter student name: ";
+    std::cin.ignore();
+    std::getline(std::cin, studentName);
+    std::cout << "Enter student ID: ";
+    std::cin >> studentID;
+
+    Invoice invoice(studentName, studentID);
+    invoice.addItem(Item("Tuition Fee", 5000.00, 1));
+    invoice.addItem(Item("Library Fee", 200.00, 1));
+
+    std::string filename = invoice.generateFilename();
+    invoice.saveToHtmlFile(config.getOutputPath() + filename);
+    db.saveInvoice(invoice);
+    system("cls");
+    string fullpth = "start "+config.getOutputPath() + filename;
+    system(fullpth.c_str());
+    std::cout << "Invoice generated: " << filename << std::endl;
+}
+
+void bulkGenerateInvoices(const Config& config, Database& db, int count) {
+    for (int i = 0; i < count; ++i) {
+        std::string studentName = "Student " + std::to_string(i + 1);
+        std::string studentID = "S" + std::to_string(10000 + i);
+
+        Invoice invoice(studentName, studentID);
+        invoice.addItem(Item("Tuition Fee", 5000.00, 1));
+        invoice.addItem(Item("Library Fee", 200.00, 1));
+
+        std::string filename = invoice.generateFilename();
+        invoice.saveToHtmlFile(config.getOutputPath() + filename);
+        db.saveInvoice(invoice);
+        std::cout << "Generated invoice " << (i + 1) << " of " << count << ": " << filename << std::endl;
+    }
+}
+
+void searchInvoice(const Config& config, Database& db) {
+    std::string invoiceNumber;
+    std::cout << "Enter invoice number: ";
+    std::cin >> invoiceNumber;
+
+    Invoice invoice = db.getInvoice(invoiceNumber);
+    if (invoice.getInvoiceNumber().empty()) {
+        std::cout << "Invoice not found.\n";
+    } else {
+        std::string filename = invoice.generateFilename();
+        invoice.saveToHtmlFile(config.getOutputPath() + filename);
+        std::cout << "Invoice retrieved: " << filename << std::endl;
+    }
+}
 using namespace std;
-
-
 int main() {
-    // aboutPage();
-    int fileid =    generateInvoice();
-    std::cout << "Invoice generated: " << "invoice" + std::to_string(fileid) + ".html" << std::endl;
+    try {
+        Config config("config.ini");
+        Database db(config.getDatabasePath());
+          cout << R"( 
+     ____  _ _ _ __  __           _            
+    |  _ \(_) | |  \/  |         | |           
+    | |_) |_| | | \  / | __ _ ___| |_ ___ _ __ 
+    |  _ <| | | | |\/| |/ _` / __| __/ _ \ '__|
+    | |_) | | | | |  | | (_| \__ \ ||  __/ |   
+    |____/|_|_|_|_|  |_|\__,_|___/\__\___|_|   
+    )" << endl;
 
-    // Open the generated invoice in the default browser
-    std::string command = "start invoice" + std::to_string(fileid) + ".html";
-    system(command.c_str());
-    
+        
 
-    
-    return 0;
+        while (true) {
+            std::cout << "\n1. Generate New Invoice\n"
+                      << "2. Search Invoice by Number\n"
+                      << "3. Bulk Generate Invoices\n"
+                      << "4. Exit\n"
+                      << "Enter your choice: ";
+            
+            int choice;
+            std::cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    generateInvoice(config, db);
+                    break;
+                case 2:
+                    searchInvoice(config, db);
+                    break;
+                case 3: {
+                    int count;
+                    std::cout << "Enter number of invoices to generate: ";
+                    std::cin >> count;
+                    bulkGenerateInvoices(config, db, count);
+                    break;
+                }
+                case 4:
+                    return 0;
+                default:
+                    std::cout << "Invalid choice. Please try again.\n";
+            }
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
 }
