@@ -28,17 +28,19 @@ void generateInvoice(const Config& config, Database& db) {
     std::cin >> studentID;
 
     Invoice invoice(studentName, studentID);
-    invoice.addItem(Item("Tuition Fee", 5000.00, 1));
-    invoice.addItem(Item("Library Fee", 200.00, 1));
+    invoice.addItem(Item("Tuition Fee", 6000.00, 1));
+    invoice.addItem(Item("Library Fee", 1000.00, 1));
 
     std::string filename = invoice.generateFilename();
     invoice.saveToHtmlFile(config.getOutputPath() + filename);
     db.saveInvoice(invoice);
     system("cls");
-    string fullpth = "start "+config.getOutputPath() + filename;
+    std::string fullpth = "start "+config.getOutputPath() + filename;
     system(fullpth.c_str());
     std::cout << "Invoice generated: " << filename << std::endl;
 }
+
+
 
 void bulkGenerateInvoices(const Config& config, Database& db, int count) {
     for (int i = 0; i < count; ++i) {
@@ -90,7 +92,8 @@ int main() {
             std::cout << "\n1. Generate New Invoice\n"
                       << "2. Search Invoice by Number\n"
                       << "3. Bulk Generate Invoices\n"
-                      << "4. Exit\n"
+                      << "4. About BillMaster\n"
+                      << "5. Exit\n"
                       << "Enter your choice: ";
             
             int choice;
@@ -98,12 +101,14 @@ int main() {
 
             switch (choice) {
                 case 1:
+                system("cls");
                     generateInvoice(config, db);
                     break;
                 case 2:
+                system("cls");
                     searchInvoice(config, db);
                     break;
-                case 3: {
+                case 3: {system("cls");
                     int count;
                     std::cout << "Enter number of invoices to generate: ";
                     std::cin >> count;
@@ -111,8 +116,11 @@ int main() {
                     break;
                 }
                 case 4:
+                    break;
+                case 5:
                     return 0;
                 default:
+                system("cls");
                     std::cout << "Invalid choice. Please try again.\n";
             }
         }

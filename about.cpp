@@ -30,7 +30,7 @@ void colorfulLine(char c = '-', int length = 60) {
     setColor(7); // Reset to default color
 }
 
-void aboutPage() {
+void showaboutPage() {
     // Clear screen
     #ifdef _WIN32
     system("cls"); // system() used to run cmd commands
@@ -63,7 +63,7 @@ void aboutPage() {
     cout << setw(30) << right << "Date: " << setw(30) << left << "01/09/2024" << endl;
     cout << setw(30) << right << "License: " << setw(30) << left << "MIT License" << endl;
     cout << setw(30) << right << "GitHub: " << setw(30) << left << "nischalpandey/invoice-management-system" << endl;
-    cout<<setw(30)<<right<<"Author: "<<setw(30)<<left<<"Nischal Pandey"<<endl;
+    // cout<<setw(30)<<right<<"Author: "<<setw(30)<<left<<"Nischal Pandey"<<endl;
     colorfulLine('-');
 
     // Team information
@@ -71,7 +71,7 @@ void aboutPage() {
     cout << "Team Members:" << endl;
     
     cout << " -Ankit Sharma" << endl;
-    cout << " -rajwol Dukhuwa" << endl;
+    cout << " -Prajwol Dukhuwa" << endl;
     cout << " -Pawan Kumar Sha" << endl;
     cout << " -Nischal Pandey" << endl;
 

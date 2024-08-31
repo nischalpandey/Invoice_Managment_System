@@ -1,5 +1,5 @@
 # Invoice managment System
 
 
-### Compile Command Eg
-    g++ -I./headers main.cpp about.cpp -o myprogram
+### Compile Command 
+    g++ main.cpp about.cpp models/item.cpp models/collegeinfo.cpp db/dbmanager.cpp invoice.cpp -o ourapp
