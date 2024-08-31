@@ -14,6 +14,15 @@ public:
     string getEmail() const { return email_; }
     string getWebsite() const { return website_; }
     string getPan() const { return pan_; }
+    void beautifulgetdata(){
+        cout << "Enter College Name:"<<endl;
+        cin >> name_;
+        
+
+
+
+
+    }
 
 private:
     string name_;

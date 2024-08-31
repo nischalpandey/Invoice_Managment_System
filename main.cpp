@@ -5,10 +5,10 @@
 
 class Config {
 public:
-    Config(const std::string& configFile) {
+    Config(const std::string& databasePath , std::string outputPath = "./output/") {
         // In a real application, you would read from the config file here
-        databasePath_ = "db/invoices.txt";
-        outputPath_ = "./output/";
+        this->databasePath_ = databasePath;
+        this->outputPath_ = outputPath;
     }
 
     std::string getDatabasePath() const { return databasePath_; }
@@ -75,7 +75,16 @@ void searchInvoice(const Config& config, Database& db) {
 using namespace std;
 int main() {
     try {
-        Config config("config.ini");
+        Config config("db/invoices.txt","./outputHTML/");
+        Config config0("db/collegeinfo.txt");
+        // college
+        Database db0(config0.getDatabasePath());
+        if (!db0.checkCollegeinfo()) {
+            
+            
+            }
+
+
         Database db(config.getDatabasePath());
           cout << R"( 
      ____  _ _ _ __  __           _            

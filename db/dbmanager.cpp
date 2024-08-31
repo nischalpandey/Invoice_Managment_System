@@ -1,22 +1,65 @@
 #include <string>
-#include <vector>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
+#include <vector> // For vector operations (e.g., std::vector)
+#include <fstream> // For file I/O operations (e.g., std::ifstream, std::ofstream)
+#include <sstream> // For string stream operations (e.g., std::istringstream)
+#include <stdexcept> // For std::runtime_error
 #include "../invoice.cpp"
+#include "../models/collegeinfo.cpp"
+#include "../models/item.cpp"
+#include <iostream> 
+#include <filesystem> // For filesystem operations
+
 
 class Database {
 public:
-    Database(const std::string& dbPath) : dbPath_(dbPath) {}
+    Database(const std::string& dbPath) : dbPath_(dbPath) {
+        // Extract the directory path from the dbPath
+        std::filesystem::path dirPath = std::filesystem::path(dbPath_).parent_path();
 
+        // Check if the directory exists
+        if (!std::filesystem::exists(dirPath)) {
+            // Create the directory if it does not exist
+            std::filesystem::create_directories(dirPath);
+        }
+    }
+    
+    bool checkCollegeinfo() {
+        std::ifstream file(dbPath_ , std::ios::out|std::ios::binary);
+        if (!file) {
+            return false;
+        }
+        return true;
+    }
     
 
-    void saveInvoice(Invoice & invoice) {
-        std::ofstream file(dbPath_, std::ios::app);
-        if (!file) {
-            throw std::runtime_error("Unable to open database file for writing");
-        }
 
+
+    void saveCollegeinfo(const CollegeInfo & collegeinfo) {
+        std::ofstream file(dbPath_, std::ios::app | std::ios::binary);
+        if (!file.is_open()) {
+            throw std::runtime_error("Unable to open or create database file for writing");
+        }
+        file << collegeinfo.getName() << "|"
+             << collegeinfo.getAddress() << "|"
+             << collegeinfo.getPhone() << "|"
+             << collegeinfo.getEmail() << "|"
+             << collegeinfo.getWebsite() << "|"
+             << collegeinfo.getPan() << "\n";
+    }
+
+    void saveInvoice(Invoice & invoice) {
+
+    // print dbpath
+    std::cout << dbPath_ << std::endl;
+
+    // All modes are supported ,so error handling is not required
+        // Try to open the file in append mode; if it doesn't exist, create it
+    std::ofstream file(dbPath_, std::ios::app | std::ios::binary);
+    
+    // Check if the file was successfully opened
+    if (!file.is_open()) {
+        throw std::runtime_error("Unable to open or create database file for writing");
+    }
         file << invoice.getInvoiceNumber() << "|"
              << invoice.getStudentName() << "|"
              << invoice.getStudentID() << "|"
@@ -31,7 +74,7 @@ public:
     }
 
     Invoice getInvoice(const std::string& invoiceNumber) {
-        std::ifstream file(dbPath_);
+        std::ifstream file(dbPath_ , std::ios::out|std::ios::binary);
         if (!file) {
             throw std::runtime_error("Unable to open database file for reading");
         }
@@ -82,7 +125,7 @@ public:
 
     std::vector<std::string> getAllInvoiceNumbers() {
         std::vector<std::string> invoiceNumbers;
-        std::ifstream file(dbPath_);
+        std::ifstream file(dbPath_ , std::ios::app|std::ios::out|std::ios::in|std::ios::binary);
         if (!file) {
             throw std::runtime_error("Unable to open database file for reading");
         }

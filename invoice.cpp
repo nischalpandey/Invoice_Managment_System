@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <ctime>
 #include "models/item.cpp"
+#include <filesystem> // For filesystem operations
 
 class Invoice {
 public:
@@ -27,6 +28,13 @@ public:
     }
 
     void saveToHtmlFile(const std::string& filename) const {
+        std::filesystem::path dirPath = std::filesystem::path(filename).parent_path();
+
+        // Check if the directory exists
+        if (!std::filesystem::exists(dirPath)) {
+            // Create the directory if it does not exist
+            std::filesystem::create_directories(dirPath);
+        }
         std::ofstream file(filename);
         if (!file) {
             throw std::runtime_error("Unable to create HTML file");
@@ -61,13 +69,13 @@ public:
 <body>
     <div class="container">
         <div class="header">
-            <img src="../media/logo.jpg" alt="Kamnalagne Engineering College Logo" class="logo">
-            <h1>Kamnalagne Engineering College (KEC)</h1>
+            <img src="../media/logo.jpg" alt="Berojar Banaune Engineering College Logo" class="logo">
+            <h1>Berojgar Banaune Engineering College (KEC)</h1>
         </div>
         <div class="college-info">
             <p>123 Kathmandu, Kalimati<br>
             Phone: +977 (01) 123-4567 | Email: billing@kec.edu.np<br>
-            Website: www.kec.edu.np | PAN: ABCDE1234F</p>
+            Website: www.kec.edu.np | PAN:<strong> ABCDE1234F</strong></p>
         </div>
         <h2 style="text-align: center;">Monthly Invoice</h2>
         <div class="invoice-details">
@@ -78,7 +86,7 @@ public:
             </div>
             <div>
                 <p><strong>Student Name:</strong> )" << studentName_ << R"(</p>
-                <p><strong>Student ID:</strong> )" << studentID_ << R"(</p>
+                <p><strong>Student Roll:</strong> )" << studentID_ << R"(</p>
             </div>
         </div>
         <table>
@@ -105,7 +113,7 @@ public:
             <p>Total Amount: Rs)" << std::fixed << std::setprecision(2) << getTotalAmount() << R"(</p>
         </div>
         <div class="footer">
-            <p>Thank you for your prompt payment. If you have any questions, please contact our accounting department.</p>
+            <p>Thank you for your payment. If you have any questions, please contact our accounting department.</p>
         </div>
         <div class="buttons">
             <a href="#" class="btn" onclick="window.print();">Print Invoice / Save As PDF</a>
