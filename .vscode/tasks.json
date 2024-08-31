@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-I", "${workspaceFolder}/headers",  // Include path for headers
+                "main.cpp",  // List all your .cpp files
+                "about.cpp",
+                "invoice.cpp",
+                "-o", "ourapp" // Output executable name
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Bill Master C++ Build Task"
+        }
+    ]
+}
