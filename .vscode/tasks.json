@@ -7,9 +7,8 @@
             "command": "g++",
             "args": [
                 "main.cpp",  // List all your .cpp files
-                "about.cpp",
                 "allclasses.cpp",
-                "-o", "ourapp", // Output executable name
+                "-o", "newapp", // Output executable name
             ],
             "group": {
                 "kind": "build",

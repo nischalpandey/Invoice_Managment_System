@@ -5,6 +5,7 @@
 
 void buildheader();
 void buildfooter();
+void showAboutPage();
 
 
 void generateInvoice(const Config& config, Database& db) {
@@ -121,6 +122,7 @@ buildheader();
                     break;
                 }
                 case 4:
+                showAboutPage();
                     break;
                 case 5:
                     return 0;
@@ -138,7 +140,7 @@ buildheader();
 void buildheader(){
     system("cls");
     cout << "--------------------------------------------" << endl;
-
+    Utis().setColor(14); // Yellow color = 14
           cout << R"( 
      ____  _ _ _ __  __           _            
     |  _ \(_) | |  \/  |         | |           
@@ -147,8 +149,11 @@ void buildheader(){
     | |_) | | | | |  | | (_| \__ \ ||  __/ |   
     |____/|_|_|_|_|  |_|\__,_|___/\__\___|_|   
     )" << endl;
-    cout << "Made with ❤️ in Nepal"<<endl;
+    Utis().setColor(7); // Reset to default color
+    cout<< std::setw(40)<< std::right<<"Made with Love"<<endl;
+    Utis().setColor(10);
     cout<< std::setw(40) << std::right << "Version 1.0" << endl;
+    Utis().setColor(7); // Reset to default color
     cout << "--------------------------------------------" << endl;
 
 
@@ -159,4 +164,22 @@ void buildfooter(){
     cout << "BillMaster - Copyright 2024" << endl;
     cout << "--------------------------------------------" << endl;
     system("pause"); // Pause the console so the user can read the message
+}
+
+
+void showAboutPage(){
+
+buildheader();
+
+Utis().colorfulLine();
+    cout << setw(30) << right << "App Name: " << setw(30) << left << "BillMaster" << endl;
+    cout << setw(30) << right << "Version: " << setw(30) << left << "1.0" << endl;
+    cout << setw(30) << right << "Built with: " << setw(30) << left << "C++ & OOP Concepts" << endl;
+    cout << setw(30) << right << "Date: " << setw(30) << left << "01/09/2024" << endl;
+    cout << setw(30) << right << "License: " << setw(30) << left << "MIT License" << endl;
+    cout << setw(30) << right << "GitHub: " << setw(30) << left << "nischalpandey/invoice-management-system" << endl;
+    // cout<<setw(30)<<right<<"Author: "<<setw(30)<<left<<"Nischal Pandey"<<endl;
+ 
+
+
 }

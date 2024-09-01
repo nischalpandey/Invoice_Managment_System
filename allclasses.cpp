@@ -9,6 +9,14 @@
 #include <ctime>
 #include <fstream> // For file I/O operations (e.g., std::ifstream, std::ofstream)
 #include <sstream>
+#include <chrono> // For time-based functions
+#include <thread>  // For sleep_for() function
+
+// For Windows color support
+#ifdef _WIN32  // Check if running on Windows, ifdef is a preprocessor directive
+#include <windows.h>  // For Windows API functions eg. SetConsoleTextAttribute()
+#endif // close ifdef
+
 using namespace std;
 
 // .....................................................
@@ -30,7 +38,28 @@ private:
 // .....................................................
 
 
+class Utis{
+public:
+void setColor(int color) {
+#ifdef _WIN32
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+#endif
+}
+void colorfulLine() {
+    string c = "-"; // Character to print
+    int length = 80; // Length of the line
 
+    for (int i = 0; i < length; i++) {
+        setColor(i % 6 + 9); // Cycle through colors
+        cout << c;
+        this_thread::sleep_for(chrono::milliseconds(5)); // Slight delay for animation effect
+    }
+    cout << endl;
+    setColor(7); // Reset to default color
+}
+
+
+};
 
 
 class Item {
