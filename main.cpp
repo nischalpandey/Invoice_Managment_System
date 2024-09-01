@@ -1,23 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "db/dbmanager.cpp"
+#include "allclasses.cpp"
 
-class Config {
-public:
-    Config(const std::string& databasePath , std::string outputPath = "./output/") {
-        // In a real application, you would read from the config file here
-        this->databasePath_ = databasePath;
-        this->outputPath_ = outputPath;
-    }
+void buildheader();
+void buildfooter();
 
-    std::string getDatabasePath() const { return databasePath_; }
-    std::string getOutputPath() const { return outputPath_; }
-
-private:
-    std::string databasePath_;
-    std::string outputPath_;
-};
 
 void generateInvoice(const Config& config, Database& db) {
     std::string studentName, studentID;
@@ -73,29 +61,37 @@ void searchInvoice(const Config& config, Database& db) {
     }
 }
 using namespace std;
+
 int main() {
     try {
-        Config config("db/invoices.txt","./outputHTML/");
+       
         Config config0("db/collegeinfo.txt");
         // college
         Database db0(config0.getDatabasePath());
-        if (!db0.checkCollegeinfo()) {
+
+        buildheader();
+       
+
+if (!db0.checkCollegeinfo())
+{
+cout<<"*No College Information Found*"<<endl;
+cout<<"Please Enter College Information"<<endl;
+}
+
+        while (!db0.checkCollegeinfo())
+        {
+            CollegeInfo collegeinfo;
+            collegeinfo.beautifulsavedata();
+            db0.saveCollegeinfo(collegeinfo);
             
-            
-            }
 
+}
 
-        Database db(config.getDatabasePath());
-          cout << R"( 
-     ____  _ _ _ __  __           _            
-    |  _ \(_) | |  \/  |         | |           
-    | |_) |_| | | \  / | __ _ ___| |_ ___ _ __ 
-    |  _ <| | | | |\/| |/ _` / __| __/ _ \ '__|
-    | |_) | | | | |  | | (_| \__ \ ||  __/ |   
-    |____/|_|_|_|_|  |_|\__,_|___/\__\___|_|   
-    )" << endl;
-
+buildheader();
         
+         
+          Config config("db/invoices.txt","./outputHTML/");
+        Database db(config.getDatabasePath());
 
         while (true) {
             std::cout << "\n1. Generate New Invoice\n"
@@ -137,4 +133,30 @@ int main() {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
+}
+
+void buildheader(){
+    system("cls");
+    cout << "--------------------------------------------" << endl;
+
+          cout << R"( 
+     ____  _ _ _ __  __           _            
+    |  _ \(_) | |  \/  |         | |           
+    | |_) |_| | | \  / | __ _ ___| |_ ___ _ __ 
+    |  _ <| | | | |\/| |/ _` / __| __/ _ \ '__|
+    | |_) | | | | |  | | (_| \__ \ ||  __/ |   
+    |____/|_|_|_|_|  |_|\__,_|___/\__\___|_|   
+    )" << endl;
+    cout << "Made with ❤️ in Nepal"<<endl;
+    cout<< std::setw(40) << std::right << "Version 1.0" << endl;
+    cout << "--------------------------------------------" << endl;
+
+
+}
+void buildfooter(){
+
+    cout << "--------------------------------------------" << endl;
+    cout << "BillMaster - Copyright 2024" << endl;
+    cout << "--------------------------------------------" << endl;
+    system("pause"); // Pause the console so the user can read the message
 }

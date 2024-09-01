@@ -8,12 +8,8 @@
             "args": [
                 "main.cpp",  // List all your .cpp files
                 "about.cpp",
-                "models/item.cpp",
-                "models/collegeinfo.cpp",
-                "db/dbmanager.cpp",
-                
-                "invoice.cpp",
-                "-o", "ourapp" // Output executable name
+                "allclasses.cpp",
+                "-o", "ourapp", // Output executable name
             ],
             "group": {
                 "kind": "build",
