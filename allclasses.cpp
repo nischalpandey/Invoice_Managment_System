@@ -12,6 +12,7 @@
 #include <chrono> // For time-based functions
 #include <thread> // For sleep_for() function
 
+#include <algorithm>
 // For Windows color support
 #ifdef _WIN32        // Check if running on Windows, ifdef is a preprocessor directive
 #include <windows.h> // For Windows API functions eg. SetConsoleTextAttribute()
@@ -57,7 +58,7 @@ public:
         {
             setColor(i % 6 + 9); // Cycle through colors
             cout << c;
-            this_thread::sleep_for(chrono::milliseconds(15)); // Slight delay for animation effect
+            this_thread::sleep_for(chrono::milliseconds(20)); // Slight delay for animation effect
         }
         cout << endl;
         setColor(7); // Reset to default color
@@ -444,13 +445,13 @@ public:
 <body>
     <div class="container">
         <div class="header">
-            <img src="../media/logo.jpg" alt="Berojar Banaune Engineering College Logo" class="logo">
+            <img src="https://raw.githubusercontent.com/nischalpandey/Invoice_Managment_System/main/media/logo.jpg" alt="Berojar Banaune Engineering College Logo" class="logo">
             <h2>)" << collegeinfo_.getName() << R"(</h2>
         </div>
-        <div class="college-info">
-            <p>123 Kathmandu, Kalimati<br>
-            Phone: +977 (01) 123-4567 | Email: billing@kec.edu.np<br>
-            Website: www.kec.edu.np | PAN:<strong> ABCDE1234F</strong></p>
+         <div class="college-info">
+            <p>)" << collegeinfo_.getAddress() << R"(<br>
+            Phone: )" << collegeinfo_.getPhone() << R"( | Email: )" << collegeinfo_.getEmail() << R"(<br>
+            Website: )" << collegeinfo_.getWebsite() << R"( | PAN: <strong>)" << collegeinfo_.getPan() << R"(</strong></p>
         </div>
         <h2 style="text-align: center;">Invoice</h2>
         <div class="invoice-details">
@@ -603,7 +604,86 @@ public:
             std::filesystem::create_directories(dirPath);
         }
     }
+std::vector<Invoice> getAllInvoices(){
+std::vector<Invoice> invoices;
+std::ifstream file(dbPath_, std::ios::out | std::ios::binary);
+        if (!file)
+        {
+            throw std::runtime_error("Unable to open database file for reading");
+        }
 
+        std::string line;
+        while (std::getline(file, line))
+        {
+            std::istringstream iss(line);
+            std::string currentInvoiceNumber;
+            std::getline(iss, currentInvoiceNumber, '|');
+
+            std::string studentName, studentID, date;
+            double totalAmount;
+            std::getline(iss, studentName, '|');
+            std::getline(iss, studentID, '|');
+            std::getline(iss, date, '|');
+            iss >> totalAmount;
+
+            Invoice invoice(studentName, studentID);
+            invoice.setInvoiceNumber(currentInvoiceNumber);
+            invoice.setCurrentDate(date);
+
+            while (std::getline(file, line) && line != "END")
+            {
+                std::istringstream itemIss(line);
+                std::string itemType;
+                std::getline(itemIss, itemType, '|');
+                if (itemType == "ITEM")
+                {
+                    std::string itemName;
+                    double price;
+                    int quantity;
+                    std::getline(itemIss, itemName, '|');
+                    itemIss >> price;
+                    itemIss.ignore();
+                    itemIss >> quantity;
+                    invoice.getCollegeInfo().getItems().emplace_back(itemName, price, quantity);
+                }
+            }
+            invoices.push_back(invoice);
+        }
+        return invoices;
+}
+    bool checkInvoice(const std::string &invoiceNumber)
+    {
+        std::ifstream file(dbPath_, std::ios::out | std::ios::binary);
+        if (!file)
+        {
+            return false;
+        }
+
+        std::string line;
+        while (std::getline(file, line))
+        {
+            std::istringstream iss(line);
+            std::string currentInvoiceNumber;
+            std::getline(iss, currentInvoiceNumber, '|');
+
+            if (currentInvoiceNumber == invoiceNumber)
+            {
+                return true;
+            }
+
+            // Skip to the end of the current invoice
+            while (std::getline(file, line) && line != "END")
+            {
+            }
+        }
+
+        return false;
+
+        
+
+
+
+}
     bool checkCollegeinfo()
     {
         std::ifstream file(dbPath_, std::ios::out | std::ios::binary);

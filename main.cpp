@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+
+#include <algorithm>
 #include <vector>
 #include "allclasses.cpp"
 
@@ -7,65 +9,11 @@ void buildheader();
 void buildfooter();
 void walkscreen();
 void showAboutPage();
+void generateInvoice(const Config &config, Database &db,const Config &config0);
+void bulkGenerateInvoices(const Config &config, Database &db, int count);
+void searchInvoice(const Config &config, Database &db);
 
-void generateInvoice(const Config &config, Database &db,const Config &config0)
-{
-    std::string studentName, studentID;
-    std::cout << "Enter student name: ";
-    std::cin.ignore();
-    std::getline(std::cin, studentName);
-    std::cout << "Enter student Roll No: ";
-    std::cin >> studentID;
-    
 
-    Invoice invoice(studentName, studentID);
-    invoice.setCollegeInfo(config0.getDatabasePath());
-   
-
-    std::string filename = invoice.generateFilename();
-    invoice.saveToHtmlFile(config.getOutputPath() + filename);
-    db.saveInvoice(invoice);
-    // system("cls");
-    std::string fullpth = "start " + config.getOutputPath() + filename;
-    system(fullpth.c_str());
-    std::cout << "Invoice generated: " << filename << std::endl;
-}
-
-void bulkGenerateInvoices(const Config &config, Database &db, int count)
-{
-    for (int i = 0; i < count; ++i)
-    {
-        std::string studentName = "Student " + std::to_string(i + 1);
-        std::string studentID = "S" + std::to_string(10000 + i);
-
-        Invoice invoice(studentName, studentID);
-        invoice.setCollegeInfo(config.getDatabasePath());
-
-        std::string filename = invoice.generateFilename();
-        invoice.saveToHtmlFile(config.getOutputPath() + filename);
-        db.saveInvoice(invoice);
-        std::cout << "Generated invoice " << (i + 1) << " of " << count << ": " << filename << std::endl;
-    }
-}
-
-void searchInvoice(const Config &config, Database &db)
-{
-    std::string invoiceNumber;
-    std::cout << "Enter invoice number: ";
-    std::cin >> invoiceNumber;
-
-    Invoice invoice = db.getInvoice(invoiceNumber);
-    if (invoice.getInvoiceNumber().empty())
-    {
-        std::cout << "Invoice not found.\n";
-    }
-    else
-    {
-        std::string filename = invoice.generateFilename();
-        invoice.saveToHtmlFile(config.getOutputPath() + filename);
-        std::cout << "Invoice retrieved: " << filename << std::endl;
-    }
-}
 using namespace std;
 
 int main()
@@ -103,6 +51,8 @@ int main()
 
         while (true)
         {
+            std::cout << "\n\033[1;36mMain Menu:\033[0m\n";
+
             std::cout << "\n1. Generate New Invoice\n"
                       << "2. Search Invoice by Number\n"
                       << "3. Bulk Generate Invoices\n"
@@ -244,4 +194,98 @@ void showAboutPage()
     // cout<<setw(30)<<right<<"Author: "<<setw(30)<<left<<"Nischal Pandey"<<endl;
     
 
+}
+
+void generateInvoice(const Config &config, Database &db,const Config &config0)
+{
+    std::string studentName, studentID;
+    std::cout << "Enter student name: ";
+    std::cin.ignore();
+    std::getline(std::cin, studentName);
+    std::cout << "Enter student Roll No: ";
+    std::cin >> studentID;
+    
+
+    Invoice invoice(studentName, studentID);
+    invoice.setCollegeInfo(config0.getDatabasePath());
+   
+
+    std::string filename = invoice.generateFilename();
+    invoice.saveToHtmlFile(config.getOutputPath() + filename);
+    db.saveInvoice(invoice);
+    // system("cls");
+    std::string fullpth = "start " + config.getOutputPath() + filename;
+    system(fullpth.c_str());
+    std::cout << "Invoice generated: " << filename << std::endl;
+}
+
+void bulkGenerateInvoices(const Config &config, Database &db, int count)
+{
+    for (int i = 0; i < count; ++i)
+    {
+        std::string studentName = "Student " + std::to_string(i + 1);
+        std::string studentID = "S" + std::to_string(10000 + i);
+
+        Invoice invoice(studentName, studentID);
+        invoice.setCollegeInfo(config.getDatabasePath());
+
+        std::string filename = invoice.generateFilename();
+        invoice.saveToHtmlFile(config.getOutputPath() + filename);
+        db.saveInvoice(invoice);
+        std::cout << "Generated invoice " << (i + 1) << " of " << count << ": " << filename << std::endl;
+    }
+}
+
+void searchInvoice(const Config &config, Database &db)
+{
+
+
+
+
+    std::vector<Invoice> invoices = db.getAllInvoices();
+    
+    if (invoices.empty())
+    {
+        std::cout << "No invoices found in the database.\n";
+        return;
+    }
+
+    std::cout << "All invoices:\n";
+    for (const auto& invoice : invoices)
+    {
+        std::cout << "Invoice Number: " << invoice.getInvoiceNumber()
+                  << ", Student: " << invoice.getStudentName()
+                  << ", Roll No: " << invoice.getStudentID() << "\n";
+    }
+
+    std::string searchTerm;
+    std::cout << "\nEnter search term (invoice number or student Roll NO) or press Enter to exit: ";
+    std::cin.ignore();
+    std::getline(std::cin, searchTerm);
+
+    if (searchTerm.empty())
+    {
+        return;
+    }
+
+    auto it = std::find_if(invoices.begin(), invoices.end(),
+        [&searchTerm](const Invoice& inv) {
+            return inv.getInvoiceNumber() == searchTerm ||
+               
+                   inv.getStudentID() == searchTerm;
+        });
+
+    if (it != invoices.end())
+    {
+        std::string filename = it->generateFilename();
+        it->saveToHtmlFile(config.getOutputPath() + filename);
+        std::cout << "Invoice retrieved: " << filename << std::endl;
+
+        std::string fullPath = "start " + config.getOutputPath() + filename;
+        system(fullPath.c_str());
+    }
+    else
+    {
+        std::cout << "No matching invoice found.\n";
+    }
 }
