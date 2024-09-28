@@ -26,7 +26,7 @@ jobs:
         run: ls -l  # Optional: to verify the generated app.exe file
 
       - name: Upload executable
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app-executable
           path: app.exe
